@@ -1,0 +1,32 @@
+
+1. 运行时数据区域
+  由所有线程共享的数据区：方法区Method Area，堆Heap
+  线程隔离的数据区：虚拟机栈VM Stack，本地方法栈Native Method Stack，程序计数器Program Counter Register
+  
+  1. Program Counter Register
+    当前线程所执行的字节码的行号指示器，帮助线程切换后能恢复到正确的执行位置
+  2. VM Stack
+    每个方法被执行的时候创建一个栈帧Stack Frame用于存储局部变量表、操作栈、动态链接和方法出口等信息
+    每个方法被调用直至执行完成的过程，对应着一个栈帧在虚拟机栈中从入栈到出栈的过程
+    局部变量表存放Promitive type、Object Reference和returnAddress，所需的内存空间在编译期间完成分配
+    如果线程请求的栈深度大于虚拟机所允许的深度，则StackOverflowError；动态扩展也无法申请到足够内存，则OutOfMemoryError
+  3. Native Method Stack
+    为虚拟机用到的Native方法服务，HotSpot虚拟机将其与VM Stack合并
+  4. Heap
+    在虚拟机启动时创建，存放对象实例Class Instance和Array
+    可以处于物理上不连续的内存空间中，只要逻辑上是连续的即可
+  5. Method Area
+    存储已被虚拟机加载的类信息、常量、静态变量和即时编译器编译后的代码等数据
+    该区域的内存回收主要是常量池的回收和对类型的卸载
+    Runtime Constant Pool用于存放编译期生成的各种字面量和符号引用
+
+2. 对象访问
+  1. 句柄Handle
+    在Heap中划分出一块内存作为句柄池，reference中存储对象的句柄地址，句柄中鲍涵对象实例和对象类型数据的具体地址信息
+    在对象被移动时只会改变句柄中的实例数据指针，不改变reference本身
+  2. 指针Pointer
+    reference中直接存储对象地址，对象实例中存储到对象类型数据的指针
+    节省一次指针定位的时间开销，速度更快，HotSpot使用指针进行对象访问
+    
+    
+
