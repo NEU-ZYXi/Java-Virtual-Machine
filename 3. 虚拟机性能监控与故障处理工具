@@ -1,1 +1,8 @@
 
+1. JDK的命令行工具
+  1. jps：JVM Process Status Tool，显示指定系统内所有的HotSpot虚拟机进程
+  2. jstat：JVM Statistics Monitoring Tool，用于收集HotSpot虚拟机各方面的运行数据，是运行期定位虚拟机性能问题的首选工具
+  3. jinfo：Configuration Info for Java，显示虚拟机配置信息
+  4. jmap：Memory Map for Java，生成虚拟机的内存转储快照即heapdump文件
+  5. jhat：JVM Heap Dump Browser，可以让用户在浏览器上分析heapdump文件
+  6. jstack：Stack Trace for Java，显示虚拟机的线程快照即当前虚拟机内每一条线程正在执行的方法堆栈的集合，用于定位线程出现长时间停顿的原因
