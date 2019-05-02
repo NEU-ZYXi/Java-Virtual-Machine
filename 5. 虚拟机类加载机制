@@ -1,6 +1,14 @@
 
-
-
+1. 概述
+  虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终行程可以被虚拟机直接使用的Java类型，这是虚拟机的类加载机制
+  类型的加载和连接过程是在程序运行期间完成的，为程序提供高度的灵活性，Java的动态扩展特性依赖运行期动态加载和动态连接实现
+  
+2. 类加载的时机
+  类的生命周期：加载Loading、验证Verification、准备Preparation、解析Resolution、初始化Initialization、使用Using和卸载Unloading，其中验证、准备和解析称为连接Linking
+  四种情况必须对类进行初始化
+  1. 遇到new、getstatic、putstatis或invokestatic
+  2. 
+                        
 
 
 
