@@ -20,9 +20,36 @@
     1. 互斥同步Mutual Exclusion and Synchronization
       同步指在多个线程并发访问共享数据时，保证共享数据在同一个时刻只被一个线程使用
       互斥是实现同步的一种手段，包括临界区Critical Section、互斥量Mutex和信号量Semaphore
-    2. 
-      synchronized关键字是基本的互斥同步手段，被修饰编译后，同步块前后产生monitorenter和monitorexit字节码指令，需要一个reference类型的参数来指定要锁定和解锁的对象，零值为对应的对象实例或Class对象
+      互斥同步的主要问题是进行线程阻塞和唤醒时需要转入内核态中完成的性能问题，也称为阻塞同步Blocking Synchronization，属于悲观的并发策略
+    2. synchronized
+      synchronized关键字是最基本的互斥同步手段，表现为原生语法层面的互斥锁
+      被synchronized修饰编译后，同步块前后产生monitorenter和monitorexit字节码指令，需要一个reference类型的参数来指定要锁定和解锁的对象，零值为对应的对象实例或Class对象
+      执行monitorenter指令时，首先尝试获取对象的锁，如果该对象未被锁定或当前线程已经拥有该对象的锁，锁计数器加1，否则阻塞等待，monitorexit指令时锁计数器减1，当计数器为0时，锁被释放
+      synchronized同步块对同一个线程是可重入的，同步块在当前线程执行完之前会阻塞其他线程的进入
+    3. 重入锁ReentrantLock
+      是API层面的互斥锁，通过lock()和unlock()方法配合try/finally语句块来完成
+      1. 等待可中断：指当持有锁的线程长期不释放锁时，正在等待的线程可以选择放弃等待
+      2. 公平锁：指多个线程在等待同一个锁时，必须按照申请锁的时间顺序来依次获得锁，synchronized中和ReentrantLock默认情况下都是非公平锁
+      3. 锁绑定多个条件：指一个ReentrantLock对象可以同时绑定多个Condition对象
+    4. 非阻塞同步
+      属于基于冲突检测的乐观并发策略，称为非阻塞同步Non-Blocking Synchronization
+      通过硬件指令集保证操作和冲突检测这两个步骤具有原子性，包括测试并设置Test-and-Set、获取并增加Fetch-and-Increment、交换Swap、比较并交换Compare-and-Swap，CAS和加载链接/条件储存Load-Linked/Store-Conditional，LL/SC
+      CAS指令需要三个操作数分别是内存位置V、旧的预期值A和新值B，当且仅当V符合A时，才用B更新V，该操作是原子操作
+      CAS存在ABA问题，即其他线程将A值修改为B值后，再改回A值，这个过程CAS无法判断，可以通过版本号来保证
+    5. 无同步方案
+      1. 可重入代码Reentrant Code：不依赖存储在堆上的数据，用到的状态量都有参数中传入，返回结果可以预测，所有可重入的代码都是线程安全的
+      2. 线程本地存储Thread Local Storage：将共享数据的代码限制在同一个线程中执行
       
+2. 锁优化
+  1. 自旋锁与自适应自旋Adaptive Spinning
+    对于多核处理器，当两个或以上的线程同时并行执行时，让后面请求锁的线程不放弃处理器的执行时间，等待一定时间即执行一个忙循环（自旋），对于锁占用时间很短的情况自旋等待的效果很好
+    自适应自旋是指自旋的时间不再固定，而是由前一次在同一个锁上的自旋时间和锁的拥有者的状态来决定
+  2. 锁消除Lock Elimination
+    指JIT在运行时，对一些代码上要求同步，但是被检测到不可能存在共享数据竞争的锁进行消除
+  3. 锁粗化Lock Coarsening
+    如果一系列连续操作都对同一个对象反复加锁和解锁，会将加锁同步的范围扩展（粗化）到整个操作序列的外部
+  4. 轻量级锁Lightweight Locking
+  5. 偏向锁Biased Locking
 
 
 
